@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Victor Devid & Chaitanya — Wedding Invitation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Cinzel:wght@400;600&family=Great+Vibes&family=Noto+Serif+Telugu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#faeedf;--ivory:#fff9f0;--gold:#a67c1e;--gold-l:#c9a24a;--brown:#7a5a14;--green:#1f4d2b;--shadow:0 10px 30px rgba(90,60,10,.18)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:hidden;max-width:100%}
+body{background:radial-gradient(ellipse at top,#fff6e9,var(--cream) 60%,#f1dcc0);color:var(--brown);font-family:'Cormorant Garamond',serif;font-size:1.15rem;min-height:100vh}
+.script{font-family:'Great Vibes',cursive;color:var(--gold);font-weight:400}
+.eyebrow{font-family:'Cinzel',serif;letter-spacing:.3em;font-size:.68rem;color:var(--green);text-transform:uppercase}
+.rule{width:140px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:18px auto;position:relative}
+.rule::after{content:'✝';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--gold);background:var(--cream);padding:0 10px;font-size:.85rem}
+body::before{content:'';position:fixed;inset:12px;border:1.5px solid var(--gold-l);pointer-events:none;z-index:3;opacity:.7}
+
+/* Door screen */
+#door{position:fixed;inset:0;z-index:100;display:flex;background:var(--cream)}
+.panel{width:50%;height:100%;background:linear-gradient(135deg,#fbf0e0,#ecd5ae);border:2px solid var(--gold-l);position:relative;transition:transform 1.6s cubic-bezier(.77,0,.18,1);box-shadow:inset 0 0 60px rgba(166,124,30,.25)}
+.panel::before{content:'';position:absolute;inset:22px;border:1.5px solid var(--gold);opacity:.55}
+#door.open .panel.l{transform:translateX(-102%)}
+#door.open .panel.r{transform:translateX(102%)}
+#door.hidden{display:none}
+.center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:5;width:min(90vw,420px);transition:opacity .7s}
+.center.out{opacity:0;pointer-events:none}
+.cross{font-size:3rem;color:var(--gold);margin-bottom:6px}
+.door-names{font-family:'Great Vibes',cursive;font-size:clamp(2.6rem,10vw,3.8rem);color:var(--gold);line-height:1.1;margin:8px 0}
+.bell{margin-top:20px;width:104px;height:104px;border-radius:50%;border:2px solid var(--gold);background:radial-gradient(circle at 35% 30%,#fff3cf,#d8b255 80%);color:var(--brown);font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 0 6px rgba(166,124,30,.12),var(--shadow);animation:pulse 2.4s infinite;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.bell span:first-child{font-size:1.6rem}
+.bell.ring span:first-child{animation:swing .35s 4}
+@keyframes swing{50%{transform:rotate(18deg)}}
+@keyframes pulse{50%{box-shadow:0 0 0 14px rgba(166,124,30,.05),var(--shadow)}}
+.petal{position:fixed;z-index:150;pointer-events:none;font-size:1.3rem}
+
+/* Main */
+#main{display:none;position:relative;z-index:2}
+#main.show{display:block}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 1s,transform 1s}
+.reveal.in{opacity:1;transform:none}
+section{padding:70px 26px;max-width:680px;margin:0 auto;text-align:center}
+.hero{padding-top:90px}
+.names{font-family:'Great Vibes',cursive;color:var(--gold);font-size:clamp(3rem,13vw,5.2rem);line-height:1.05;margin:14px 0}
+.names small{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--brown)}
+.invite{line-height:1.7;max-width:460px;margin:0 auto}
+.verse{font-style:italic;line-height:1.7;max-width:480px;margin:0 auto}
+.verse b{color:var(--gold)}
+.verse small{display:block;margin-top:6px;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;font-style:normal}
+
+/* Heart scratch */
+.heart-box{position:relative;width:280px;height:260px;margin:30px auto 0}
+.heart-reveal{position:absolute;inset:0;clip-path:url(#heartClip);background:linear-gradient(160deg,#fff7e3,#ecd29b);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:var(--brown)}
+.heart-reveal .d{font-size:2rem;font-weight:600;color:var(--gold);margin:4px 0}
+.heart-reveal .s{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.12em}
+#heartCanvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+.hint{margin-top:14px;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.12em;color:var(--green);opacity:.8;transition:opacity .5s}
+.hint.done{opacity:0}
+.glitter{position:fixed;z-index:200;pointer-events:none;border-radius:50%}
+
+/* Countdown */
+.cd{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.cd div{min-width:76px;border:1px solid var(--gold-l);padding:14px 8px;background:rgba(255,255,255,.5)}
+.cd b{display:block;font-size:2.1rem;color:var(--gold);font-weight:600}
+.cd i{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.15em;font-style:normal;color:var(--green)}
+
+/* Details card */
+.card{border:1px solid var(--gold-l);background:rgba(255,255,255,.55);box-shadow:var(--shadow);padding:38px 24px;margin-top:28px;outline:1px solid rgba(166,124,30,.3);outline-offset:-9px}
+.lbl{color:var(--green);font-size:1.25rem;margin-top:18px}
+.lbl:first-child{margin-top:0}
+.big{font-size:1.9rem;font-weight:600;color:var(--brown);margin:2px 0}
+.mid{font-size:1.3rem;font-weight:600}
+.card .rule{margin:16px auto}
+.btn{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.1em;color:#fff;background:linear-gradient(180deg,var(--gold-l),var(--gold));padding:12px 22px;border-radius:24px;text-decoration:none}
+.lunch{font-family:'Great Vibes',cursive;font-size:2.1rem;color:var(--gold)}
+
+/* Photos */
+.photos{display:flex;gap:18px;justify-content:center;margin-top:30px}
+.frame{width:150px;height:190px;border:2px solid var(--gold-l);padding:6px;background:rgba(255,255,255,.6);box-shadow:var(--shadow);position:relative;transform:rotate(-3deg)}
+.frame{transition:transform .35s ease,box-shadow .35s ease}
+.frame:nth-child(2){transform:rotate(3deg);margin-top:12px}
+.frame:hover,.frame:active{transform:rotate(0) scale(1.08)!important;box-shadow:0 16px 40px rgba(166,124,30,.4)}
+.frame img{transition:transform .6s ease}
+.frame:hover img{transform:scale(1.07)}
+.frame{overflow:hidden}
+.frame::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);pointer-events:none}
+.frame:hover::after{transform:translateX(120%);transition:transform .9s ease}
+/* Carousel */
+.slideshow{position:relative;width:100%;max-width:480px;height:400px;margin:30px auto 0;border:2px solid var(--gold-l);padding:6px;background:rgba(255,255,255,.6);box-shadow:var(--shadow);overflow:hidden}
+.slide{position:absolute;inset:6px;opacity:0;transition:opacity 1.4s ease;overflow:hidden}
+.slide.active{opacity:1}
+.slide .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px dashed var(--gold-l);font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;color:var(--green);padding:10px}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 9s ease-in-out infinite alternate}
+@keyframes kb{to{transform:scale(1.12)}}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 14px;background:linear-gradient(0deg,rgba(60,40,5,.75),transparent);color:#fff9f0;font-style:italic;font-size:1.1rem;text-align:left}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(166,124,30,.3);cursor:pointer}
+.dot.active{background:var(--gold)}
+.frame .ph{position:absolute;inset:6px;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px dashed var(--gold-l);font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.08em;color:var(--green);padding:6px}
+.frame img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:cover}
+/* Scratch card for details */
+.sc{position:relative;margin-top:28px}
+.sc .card{margin-top:0}
+#cardCanvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+footer{padding:30px 24px 90px;text-align:center}
+footer .script{font-size:2.4rem;display:block;margin-top:4px}
+#lang{position:fixed;bottom:22px;left:22px;z-index:50;height:46px;padding:0 16px;border-radius:23px;border:1px solid var(--gold);background:var(--ivory);color:var(--brown);font-family:'Cinzel',serif;font-size:.68rem;cursor:pointer;box-shadow:var(--shadow)}
+html[lang=te] body,html[lang=te] .eyebrow,html[lang=te] .btn,html[lang=te] .cd i,html[lang=te] .hint,html[lang=te] .bell{font-family:'Noto Serif Telugu',serif;letter-spacing:0}
+html[lang=te] .script,html[lang=te] .names,html[lang=te] .door-names{font-family:'Noto Serif Telugu',serif;font-weight:600;font-size:clamp(2rem,9vw,3.2rem)}
+@media(max-width:520px){.slideshow{height:320px}section{padding:56px 20px}.heart-box{width:230px;height:214px}.cd div{min-width:64px}.cd b{font-size:1.6rem}.big{font-size:1.6rem}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<clipPath id="heartClip" clipPathUnits="objectBoundingBox"><path d="M0.5,0.9615 C0.5,0.9615 0.0536,0.6731 0.0536,0.3654 C0.0536,0.1846 0.1893,0.0692 0.3214,0.0692 C0.4214,0.0692 0.4929,0.1731 0.5,0.25 C0.5071,0.1731 0.5786,0.0692 0.6786,0.0692 C0.8107,0.0692 0.9464,0.1846 0.9464,0.3654 C0.9464,0.6731 0.5,0.9615 0.5,0.9615 Z"/></clipPath>
+</defs></svg>
+
+<!-- Door -->
+<div id="door">
+  <div class="panel l"></div><div class="panel r"></div>
+  <div class="center" id="center">
+    <div class="eyebrow" data-en="You are joyfully invited" data-te="మిమ్మల్ని సంతోషంగా ఆహ్వానిస్తున్నాము">You are joyfully invited</div>
+    <div class="cross">✝</div>
+    <div class="door-names" data-en="Victor Devid<br>&amp; Chaitanya" data-te="విక్టర్ దేవిడ్<br>&amp; చైతన్య">Victor Devid<br>&amp; Chaitanya</div>
+    <div class="rule"></div>
+    <button class="bell" id="bell"><span>🔔</span><span data-en="Tap to ring<br>the wedding bell" data-te="వివాహ గంట<br>మోగించండి">Tap to ring<br>the wedding bell</span></button>
+  </div>
+</div>
+
+<div id="main">
+  <section class="hero reveal">
+    <div class="eyebrow" data-en="With the blessings of GOD" data-te="దేవుని ఆశీర్వాదాలతో">With the blessings of GOD</div>
+    <h1 class="names"><span data-en="Victor Devid" data-te="విక్టర్ దేవిడ్">Victor Devid</span><small data-en="with" data-te="తో">with</small><span data-en="Chaitanya" data-te="చైతన్య">Chaitanya</span></h1>
+    <div class="rule"></div>
+    <p class="invite" data-en="With the blessings of <b>GOD</b>, we joyfully invite you to celebrate the beginnings of our new journey together." data-te="దేవుని ఆశీర్వాదాలతో, మా కొత్త ప్రయాణపు ఆరంభాన్ని జరుపుకోవడానికి మిమ్మల్ని సంతోషంగా ఆహ్వానిస్తున్నాము.">With the blessings of <b>GOD</b>, we joyfully invite you to celebrate the beginnings of our new journey together.</p>
+
+    <!-- ===== BRIDE & GROOM PHOTOS: put groom.jpg and bride.jpg inside an "images" folder next to index.html ===== -->
+    <div class="photos">
+      <div class="frame"><div class="ph" data-en="Groom<br>Victor Devid" data-te="వరుడు<br>విక్టర్ దేవిడ్">Groom<br>Victor Devid</div><img src="images/groom.jpg" alt="Victor Devid" onerror="this.remove()"></div>
+      <div class="frame"><div class="ph" data-en="Bride<br>Chaitanya" data-te="వధువు<br>చైతన్య">Bride<br>Chaitanya</div><img src="images/bride.jpg" alt="Chaitanya" onerror="this.remove()"></div>
+    </div>
+
+    <div class="heart-box">
+      <div class="heart-reveal">
+        <div class="eyebrow" data-en="Save the Date" data-te="తేదీ గుర్తుంచుకోండి">Save the Date</div>
+        <div class="d" data-en="06 October" data-te="అక్టోబర్ 06">06 October</div>
+        <div class="s" data-en="2026 · TUESDAY · 10:00 AM" data-te="2026 · మంగళవారం · ఉదయం 10:00">2026 · TUESDAY · 10:00 AM</div>
+      </div>
+      <canvas id="heartCanvas"></canvas>
+    </div>
+    <div class="hint" id="hint" data-en="✦ Scratch the heart to reveal our date ✦" data-te="✦ తేదీ చూడటానికి హృదయాన్ని గీరండి ✦">✦ Scratch the heart to reveal our date ✦</div>
+  </section>
+
+  <section class="reveal">
+    <p class="verse">“ It is Good thing to give thanks unto the <b>LORD</b>”,<br>“<b>LORD</b> hast made me glad through thy work.”<small>PSALM 92:1,4</small></p>
+  </section>
+
+  <!-- ===== PHOTO CAROUSEL: add photo1.jpg, photo2.jpg, photo3.jpg (more slides: copy a .slide block + a .dot) to the "images" folder ===== -->
+  <section class="reveal">
+    <div class="eyebrow" data-en="Our Moments" data-te="మా క్షణాలు">Our Moments</div>
+    <div class="slideshow" id="slideshow">
+      <div class="slide active"><div class="ph" data-en="Add photo 1<br>images/photo1.jpg" data-te="ఫోటో 1 జోడించండి<br>images/photo1.jpg">Add photo 1<br>images/photo1.jpg</div><img src="images/photo1.jpg" alt="" onerror="this.remove()"><div class="cap" data-en="Two hearts, two families, one beautiful beginning." data-te="రెండు హృదయాలు, రెండు కుటుంబాలు, ఒక అందమైన ఆరంభం.">Two hearts, two families, one beautiful beginning.</div></div>
+      <div class="slide"><div class="ph" data-en="Add photo 2<br>images/photo2.jpg" data-te="ఫోటో 2 జోడించండి<br>images/photo2.jpg">Add photo 2<br>images/photo2.jpg</div><img src="images/photo2.jpg" alt="" onerror="this.remove()"><div class="cap" data-en="God has been faithful in every step of our journey." data-te="మా ప్రయాణంలో ప్రతి అడుగులో దేవుడు నమ్మకంగా ఉన్నాడు.">God has been faithful in every step of our journey.</div></div>
+      <div class="slide"><div class="ph" data-en="Add photo 3<br>images/photo3.jpg" data-te="ఫోటో 3 జోడించండి<br>images/photo3.jpg">Add photo 3<br>images/photo3.jpg</div><img src="images/photo3.jpg" alt="" onerror="this.remove()"><div class="cap" data-en="Now a new chapter begins, with your blessings." data-te="ఇప్పుడు, మీ ఆశీర్వాదాలతో ఒక కొత్త అధ్యాయం మొదలవుతుంది.">Now a new chapter begins, with your blessings.</div></div>
+    </div>
+    <div class="dots"><span class="dot active" data-i="0"></span><span class="dot" data-i="1"></span><span class="dot" data-i="2"></span></div>
+  </section>
+
+  <section class="reveal">
+    <div class="eyebrow" data-en="The celebration begins in" data-te="వేడుక ప్రారంభమయ్యే వరకు">The celebration begins in</div>
+    <div class="cd">
+      <div><b id="d">00</b><i data-en="DAYS" data-te="రోజులు">DAYS</i></div>
+      <div><b id="h">00</b><i data-en="HOURS" data-te="గంటలు">HOURS</i></div>
+      <div><b id="m">00</b><i data-en="MINS" data-te="నిమిషాలు">MINS</i></div>
+      <div><b id="s">00</b><i data-en="SECS" data-te="సెకన్లు">SECS</i></div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="eyebrow" data-en="Wedding Details" data-te="వివాహ వివరాలు">Wedding Details</div>
+    <div class="sc"><div class="card">
+      <div class="lbl" data-en="Wedding Date" data-te="వివాహ తేదీ">Wedding Date</div>
+      <div class="big" data-en="06 October 2026" data-te="06 అక్టోబర్ 2026">06 October 2026</div>
+      <div data-en="Tuesday · 10:00 am" data-te="మంగళవారం · ఉదయం 10:00">Tuesday · 10:00 am</div>
+      <div class="rule"></div>
+      <div class="lbl" data-en="Solemnized by" data-te="వివాహ క్రియ నిర్వహించువారు">Solemnized by</div>
+      <div class="mid" data-en="Bro. Y. John Subbareddy (GS)" data-te="బ్రదర్ Y. జాన్ సుబ్బారెడ్డి (GS)">Bro. Y. John Subbareddy (GS)</div>
+      <div data-en="Eshcol, Ongole." data-te="ఎష్కోల్, ఒంగోలు.">Eshcol, Ongole.</div>
+      <div class="mid" style="margin-top:10px" data-en="Bro. J. Prasanna Kumar (GS)" data-te="బ్రదర్ J. ప్రసన్న కుమార్ (GS)">Bro. J. Prasanna Kumar (GS)</div>
+      <div data-en="Patmos, Mangalagiri." data-te="పత్మాస్, మంగళగిరి.">Patmos, Mangalagiri.</div>
+      <div class="rule"></div>
+      <div class="lbl" data-en="Venue" data-te="వేదిక">Venue</div>
+      <div class="mid" data-en="Patmos Prayer House," data-te="పత్మాస్ ప్రార్థనా మందిరం,">Patmos Prayer House,</div>
+      <div data-en="Krosurivari Thota, Mangalagiri." data-te="క్రొసూరివారి తోట, మంగళగిరి.">Krosurivari Thota, Mangalagiri.</div>
+      <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Patmos+Prayer+House+Krosurivari+Thota+Mangalagiri" data-en="📍 Get Directions" data-te="📍 దారి చూపు">📍 Get Directions</a>
+      <div class="rule"></div>
+      <div class="lunch" data-en="Lunch Follows" data-te="తదుపరి భోజనం">Lunch Follows</div>
+    </div><canvas id="cardCanvas"></canvas></div>
+    <div class="hint" id="cardHint" data-en="✦ Scratch the card to reveal the details ✦" data-te="✦ వివరాలు చూడటానికి కార్డును గీరండి ✦">✦ Scratch the card to reveal the details ✦</div>
+  </section>
+
+  <section class="reveal">
+    <p class="script" style="font-size:2rem;line-height:1.4" data-en="Your Presence and blessings will make our day even more special." data-te="మీ రాక మరియు ఆశీర్వాదాలు మా రోజును మరింత ప్రత్యేకంగా చేస్తాయి.">Your Presence and blessings will make our day even more special.</p>
+    <div class="rule"></div>
+    <p class="invite" data-en="Two hearts, Two families, One beautiful beginning.<br>We invite you to be a part of our special day." data-te="రెండు హృదయాలు, రెండు కుటుంబాలు, ఒక అందమైన ఆరంభం.<br>మా ప్రత్యేక రోజులో భాగం కావడానికి మిమ్మల్ని ఆహ్వానిస్తున్నాము.">Two hearts, Two families, One beautiful beginning.<br>We invite you to be a part of our special day.</p>
+  </section>
+
+  <footer>
+    <div class="script" style="font-size:1.6rem" data-en="With Love," data-te="ప్రేమతో,">With Love,</div>
+    <span class="script" data-en="Victor Devid" data-te="విక్టర్ దేవిడ్">Victor Devid</span>
+  </footer>
+</div>
+
+<button id="lang" title="Language">EN / తె</button>
+
+<script>
+const $ = id => document.getElementById(id);
+const door = $('door'), main = $('main'), bell = $('bell');
+
+// Ring the bell → doors open → petals → invitation
+bell.onclick = () => {
+  if (bell.classList.contains('ring')) return;
+  bell.classList.add('ring');
+  setTimeout(() => {
+    door.classList.add('open'); $('center').classList.add('out');
+    ['🌸','🤍','🕊️','🌼','✨'].forEach((f,k)=>{ for(let i=0;i<7;i++) petal(f, i*k); });
+  }, 1300);
+  setTimeout(() => {
+    door.classList.add('hidden'); main.classList.add('show');
+    sizeHeart(); paintHeart(); sizeCard(); paintCard();
+    const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), {threshold:.15});
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  }, 3400);
+};
+function petal(ch, n){
+  setTimeout(() => {
+    const p = document.createElement('div');
+    p.className = 'petal'; p.textContent = ch;
+    p.style.left = Math.random()*100 + 'vw'; p.style.top = '-30px';
+    document.body.appendChild(p);
+    const t = 2200 + Math.random()*1800;
+    p.animate([{transform:'translate(0,0) rotate(0)'},{transform:`translate(${Math.random()*120-60}px,${innerHeight+60}px) rotate(${Math.random()*500-250}deg)`}], {duration:t, easing:'ease-in'});
+    setTimeout(() => p.remove(), t);
+  }, Math.random()*1200 + n*20);
+}
+
+// Countdown to 06 Oct 2026, 10:00 am IST
+const target = new Date('2026-10-06T10:00:00+05:30').getTime();
+function tick(){
+  const x = Math.max(0, target - Date.now()), p = n => String(n).padStart(2,'0');
+  $('d').textContent = p(Math.floor(x/864e5)); $('h').textContent = p(Math.floor(x%864e5/36e5));
+  $('m').textContent = p(Math.floor(x%36e5/6e4)); $('s').textContent = p(Math.floor(x%6e4/1e3));
+}
+tick(); setInterval(tick, 1000);
+
+// Heart scratch card
+const cv = $('heartCanvas'), cx = cv.getContext('2d');
+const HEART = new Path2D('M0.5,0.9615 C0.5,0.9615 0.0536,0.6731 0.0536,0.3654 C0.0536,0.1846 0.1893,0.0692 0.3214,0.0692 C0.4214,0.0692 0.4929,0.1731 0.5,0.25 C0.5071,0.1731 0.5786,0.0692 0.6786,0.0692 C0.8107,0.0692 0.9464,0.1846 0.9464,0.3654 C0.9464,0.6731 0.5,0.9615 0.5,0.9615 Z');
+let done = false, down = false, base = 0, last = 0;
+function sizeHeart(){ const r = cv.getBoundingClientRect(), d = devicePixelRatio||1; cv.width = r.width*d; cv.height = r.height*d; }
+function heartPath(w,h){ const p = new Path2D(); p.addPath(HEART, new DOMMatrix([w,0,0,h,0,0])); return p; }
+function transparent(){ const a = cx.getImageData(0,0,cv.width,cv.height).data; let n = 0; for(let i=3;i<a.length;i+=32) if(a[i]===0) n++; return n; }
+function paintHeart(){
+  const w = cv.width, h = cv.height, hp = heartPath(w,h);
+  cx.globalCompositeOperation = 'source-over'; cx.clearRect(0,0,w,h);
+  cx.save(); cx.clip(hp);
+  const g = cx.createLinearGradient(0,0,w,h);
+  g.addColorStop(0,'#e8c766'); g.addColorStop(.5,'#b8892a'); g.addColorStop(1,'#8c6416');
+  cx.fillStyle = g; cx.fillRect(0,0,w,h);
+  cx.fillStyle = '#fff6df'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+  cx.font = `600 ${h*.12}px serif`; cx.fillText('✝', w/2, h*.42);
+  cx.font = `600 ${h*.05}px Cinzel,serif`; cx.fillText('S C R A T C H', w/2, h*.58);
+  cx.restore();
+  cx.lineWidth = Math.max(2, h*.01); cx.strokeStyle = '#a67c1e'; cx.stroke(hp);
+  base = transparent();
+}
+function scratch(e){
+  if (done) return;
+  const r = cv.getBoundingClientRect(), t = e.touches ? e.touches[0] : e;
+  const x = (t.clientX-r.left)*cv.width/r.width, y = (t.clientY-r.top)*cv.height/r.height;
+  cx.globalCompositeOperation = 'destination-out';
+  cx.beginPath(); cx.arc(x, y, cv.width*.075, 0, 7); cx.fill();
+  glitter(t.clientX, t.clientY);
+  if ((last = (last+1) % 4) === 0 && (transparent()-base)/(cv.width*cv.height/8 - base) > .3) reveal();
+}
+function glitter(x,y){
+  for(let i=0;i<2;i++){
+    const b = document.createElement('div'), s = 3+Math.random()*4;
+    b.className = 'glitter'; b.style.cssText = `width:${s}px;height:${s}px;left:${x+Math.random()*16-8}px;top:${y+Math.random()*16-8}px;background:#c9a24a;box-shadow:0 0 6px #e8c766`;
+    document.body.appendChild(b);
+    b.animate([{transform:'none',opacity:1},{transform:`translate(${Math.random()*40-20}px,-30px) scale(0)`,opacity:0}], {duration:700});
+    setTimeout(() => b.remove(), 750);
+  }
+}
+function reveal(){
+  done = true; cv.style.transition = 'opacity .8s'; cv.style.opacity = 0;
+  $('hint').classList.add('done'); setTimeout(() => cv.style.display = 'none', 800);
+  for(let i=0;i<40;i++) petal(['🌸','✨','🤍'][i%3], i);
+}
+cv.addEventListener('mousedown', e => { down = true; scratch(e); });
+addEventListener('mouseup', () => down = false);
+cv.addEventListener('mousemove', e => down && scratch(e));
+cv.addEventListener('touchstart', e => { down = true; scratch(e); }, {passive:true});
+cv.addEventListener('touchmove', e => down && scratch(e), {passive:true});
+cv.addEventListener('touchend', () => down = false);
+addEventListener('resize', () => { if(!done && main.classList.contains('show')){ sizeHeart(); paintHeart(); } });
+
+// Scratch card over the wedding details
+const cc = $('cardCanvas'), kx = cc.getContext('2d');
+let cdone = false, cdown = false, cbase = 0, cn = 0;
+function sizeCard(){ const r = cc.getBoundingClientRect(), d = devicePixelRatio||1; cc.width = r.width*d; cc.height = r.height*d; }
+function ctrans(){ const a = kx.getImageData(0,0,cc.width,cc.height).data; let n = 0; for(let i=3;i<a.length;i+=32) if(a[i]===0) n++; return n; }
+function paintCard(){
+  const w = cc.width, h = cc.height;
+  kx.globalCompositeOperation = 'source-over'; kx.clearRect(0,0,w,h);
+  const g = kx.createLinearGradient(0,0,w,h);
+  g.addColorStop(0,'#e8c766'); g.addColorStop(.5,'#b8892a'); g.addColorStop(1,'#8c6416');
+  kx.fillStyle = g; kx.fillRect(0,0,w,h);
+  kx.fillStyle = '#fff6df'; kx.textAlign = 'center'; kx.textBaseline = 'middle';
+  kx.font = `600 ${w*.14}px serif`; kx.fillText('✝', w/2, h*.38);
+  kx.font = `600 ${w*.06}px Cinzel,serif`; kx.fillText('WEDDING DETAILS', w/2, h*.52);
+  kx.font = `500 ${w*.035}px Cinzel,serif`; kx.fillText('SCRATCH TO REVEAL', w/2, h*.6);
+  kx.lineWidth = Math.max(2, w*.006); kx.strokeStyle = '#fff6df'; kx.globalAlpha = .7;
+  kx.strokeRect(w*.03, w*.03, w*.94, h-w*.06); kx.globalAlpha = 1;
+  cbase = ctrans();
+}
+function cscratch(e){
+  if (cdone) return;
+  const r = cc.getBoundingClientRect(), t = e.touches ? e.touches[0] : e;
+  const x = (t.clientX-r.left)*cc.width/r.width, y = (t.clientY-r.top)*cc.height/r.height;
+  kx.globalCompositeOperation = 'destination-out';
+  kx.beginPath(); kx.arc(x, y, cc.width*.07, 0, 7); kx.fill();
+  glitter(t.clientX, t.clientY);
+  if ((cn = (cn+1) % 4) === 0 && (ctrans()-cbase)/(cc.width*cc.height/8 - cbase) > .4){
+    cdone = true; cc.style.transition = 'opacity .8s'; cc.style.opacity = 0;
+    $('cardHint').classList.add('done'); setTimeout(() => cc.style.display = 'none', 800);
+  }
+}
+cc.addEventListener('mousedown', e => { cdown = true; cscratch(e); });
+addEventListener('mouseup', () => cdown = false);
+cc.addEventListener('mousemove', e => cdown && cscratch(e));
+cc.addEventListener('touchstart', e => { cdown = true; cscratch(e); }, {passive:true});
+cc.addEventListener('touchmove', e => cdown && cscratch(e), {passive:true});
+cc.addEventListener('touchend', () => cdown = false);
+addEventListener('resize', () => { if(!cdone && main.classList.contains('show')){ sizeCard(); paintCard(); } });
+
+// Photo carousel
+const slides = document.querySelectorAll('.slide'), dots = document.querySelectorAll('.dot');
+let cur = 0;
+function show(i){ slides.forEach(x => x.classList.remove('active')); dots.forEach(x => x.classList.remove('active')); slides[i].classList.add('active'); dots[i].classList.add('active'); cur = i; }
+dots.forEach(d => d.onclick = () => show(+d.dataset.i));
+setInterval(() => show((cur+1) % slides.length), 5000);
+
+// Language toggle EN / Telugu
+let lang = 'en';
+$('lang').onclick = () => {
+  lang = lang === 'en' ? 'te' : 'en';
+  document.querySelectorAll('[data-en]').forEach(el => el.innerHTML = el.dataset[lang]);
+  document.documentElement.lang = lang;
+  $('lang').textContent = lang === 'en' ? 'EN / తె' : 'తె / EN';
+};
+</script>
+</body>
+</html>
