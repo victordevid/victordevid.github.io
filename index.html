@@ -103,10 +103,22 @@ section{padding:70px 26px;max-width:680px;margin:0 auto;text-align:center}
 .sc{position:relative;margin-top:28px}
 .sc .card{margin-top:0}
 #cardCanvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+
+/* Directions QR */
+.qr-wrap{margin:22px auto 0;display:flex;flex-direction:column;align-items:center}
+.qr-cap{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.18em;color:var(--green);text-transform:uppercase;margin-bottom:12px}
+.qr-frame{position:relative;width:176px;height:176px;padding:12px;background:#fff;border:1.5px solid var(--gold-l);box-shadow:var(--shadow);outline:1px solid rgba(166,124,30,.35);outline-offset:5px}
+.qr-frame img{display:block;width:100%;height:100%;image-rendering:crisp-edges}
+.qr-frame i{position:absolute;width:14px;height:14px;border:2px solid var(--gold)}
+.qr-frame i:nth-child(1){top:-7px;left:-7px;border-right:0;border-bottom:0}
+.qr-frame i:nth-child(2){top:-7px;right:-7px;border-left:0;border-bottom:0}
+.qr-frame i:nth-child(3){bottom:-7px;left:-7px;border-right:0;border-top:0}
+.qr-frame i:nth-child(4){bottom:-7px;right:-7px;border-left:0;border-top:0}
+.qr-note{margin-top:14px;font-style:italic;font-size:1rem}
 footer{padding:30px 24px 90px;text-align:center}
 footer .script{font-size:2.4rem;display:block;margin-top:4px}
 #lang{position:fixed;bottom:22px;left:22px;z-index:50;height:46px;padding:0 16px;border-radius:23px;border:1px solid var(--gold);background:var(--ivory);color:var(--brown);font-family:'Cinzel',serif;font-size:.68rem;cursor:pointer;box-shadow:var(--shadow)}
-html[lang=te] body,html[lang=te] .eyebrow,html[lang=te] .btn,html[lang=te] .cd i,html[lang=te] .hint,html[lang=te] .bell{font-family:'Noto Serif Telugu',serif;letter-spacing:0}
+html[lang=te] body,html[lang=te] .eyebrow,html[lang=te] .qr-cap,html[lang=te] .btn,html[lang=te] .cd i,html[lang=te] .hint,html[lang=te] .bell{font-family:'Noto Serif Telugu',serif;letter-spacing:0}
 html[lang=te] .script,html[lang=te] .names,html[lang=te] .door-names{font-family:'Noto Serif Telugu',serif;font-weight:600;font-size:clamp(2rem,9vw,3.2rem)}
 @media(max-width:520px){.slideshow{height:320px}section{padding:56px 20px}.heart-box{width:230px;height:214px}.cd div{min-width:64px}.cd b{font-size:1.6rem}.big{font-size:1.6rem}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -196,6 +208,11 @@ html[lang=te] .script,html[lang=te] .names,html[lang=te] .door-names{font-family
       <div class="mid" data-en="Patmos Prayer House," data-te="పత్మాస్ ప్రార్థనా మందిరం,">Patmos Prayer House,</div>
       <div data-en="Krosurivari Thota, Mangalagiri." data-te="క్రొసూరివారి తోట, మంగళగిరి.">Krosurivari Thota, Mangalagiri.</div>
       <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Patmos+Prayer+House+Krosurivari+Thota+Mangalagiri" data-en="📍 Get Directions" data-te="📍 దారి చూపు">📍 Get Directions</a>
+      <div class="qr-wrap">
+        <div class="qr-cap" data-en="Scan for directions" data-te="దారి కోసం స్కాన్ చేయండి">Scan for directions</div>
+        <div class="qr-frame"><i></i><i></i><i></i><i></i><img src="data:image/png;base64,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" alt="QR code for directions to Patmos Prayer House, Mangalagiri"></div>
+        <div class="qr-note" data-en="Point your phone camera here to open the map" data-te="మ్యాప్ తెరవడానికి మీ ఫోన్ కెమెరాను ఇక్కడ చూపండి">Point your phone camera here to open the map</div>
+      </div>
       <div class="rule"></div>
       <div class="lunch" data-en="Lunch Follows" data-te="తదుపరి భోజనం">Lunch Follows</div>
     </div><canvas id="cardCanvas"></canvas></div>
